@@ -1,0 +1,39 @@
+# Environment
+.env
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+.ruff_cache/
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# Data — raw CSVs tracked via README/instructions, not committed
+data/kaggle/**/*.csv
+data/kaggle/**/*.txt
+data/kaggle/**/*.xlsx
+data/processed/*.parquet
+data/synthetic_enrichment/*.parquet
+data/synthetic_enrichment/*.jsonl
+
+# Models and large binaries
+*.pkl
+*.joblib
+*.pt
+*.pth
+mlruns/
+
+# OS
+.DS_Store
+Thumbs.db
+
+.mlflow/
+outputs/retraining/
+__pycache__/
+*.pkl
+
+# Local-only brief, not part of the deliverable
+descricao-projeto

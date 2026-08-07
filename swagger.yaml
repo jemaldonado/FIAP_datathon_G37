@@ -1,0 +1,301 @@
+swagger: '2.0'
+info:
+  title: Datathon Contextual Thompson Sampling API
+  description: REST API for contextual Thompson Sampling bandit offer recommendations
+  version: 1.0.0
+
+basePath: /
+consumes:
+  - application/json
+produces:
+  - application/json
+
+paths:
+  /:
+    get:
+      summary: API Information
+      description: Returns API metadata and model status
+      responses:
+        200:
+          description: Success
+          schema:
+            type: object
+
+  /health:
+    get:
+      summary: Health Check
+      description: Verify API is running
+      responses:
+        200:
+          description: API is healthy
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: ok
+              model:
+                type: string
+                example: loaded
+
+  /recommend:
+    post:
+      summary: Get Offer Recommendation
+      description: Get Thompson Sampling recommendation for a customer based on their context
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/RecommendRequest'
+      responses:
+        200:
+          description: Recommendation successful
+          schema:
+            $ref: '#/definitions/RecommendResponse'
+        400:
+          description: Invalid request
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+        500:
+          description: Server error
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+
+  /apidocs:
+    get:
+      summary: Swagger UI
+      description: Interactive API documentation
+      produces:
+        - text/html
+      responses:
+        200:
+          description: Swagger UI page
+
+  /swagger.json:
+    get:
+      summary: API Specification
+      description: Swagger specification in JSON format
+      responses:
+        200:
+          description: Swagger spec
+
+  /canary/start:
+    post:
+      summary: Start Canary Deployment
+      description: Initiates a canary deployment with a new model version
+      parameters:
+        - in: body
+          name: body
+          required: false
+          schema:
+            type: object
+            properties:
+              canary_percentage:
+                type: integer
+                minimum: 1
+                maximum: 99
+                description: Percentage of traffic to route to canary model
+                example: 5
+              model_path:
+                type: string
+                description: Path to canary model file
+                example: data/models/thompson_model_v2.json
+      responses:
+        200:
+          description: Canary deployment started
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: canary_started
+              canary_percentage:
+                type: integer
+              baseline_model:
+                type: string
+              canary_model:
+                type: string
+        400:
+          description: Invalid parameters
+        500:
+          description: Server error
+
+  /canary/recommend:
+    post:
+      summary: Get Recommendation (with Canary Routing)
+      description: Get Thompson Sampling recommendation with automatic canary routing (if enabled)
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/RecommendRequest'
+      responses:
+        200:
+          description: Recommendation successful with canary info
+          schema:
+            type: object
+            properties:
+              recommended_arm:
+                type: integer
+              arm_name:
+                type: string
+              expected_conversion:
+                type: number
+              model_version:
+                type: string
+                description: Which model was used (BASELINE or CANARY)
+                example: CANARY
+              context:
+                type: object
+              timestamp:
+                type: string
+        400:
+          description: Invalid request or canary not active
+
+  /canary/metrics:
+    get:
+      summary: Get Canary Deployment Metrics
+      description: Retrieve performance metrics comparing baseline vs canary models
+      responses:
+        200:
+          description: Canary metrics
+          schema:
+            type: object
+            properties:
+              canary_enabled:
+                type: boolean
+              canary_percentage:
+                type: integer
+              baseline:
+                type: object
+                properties:
+                  total:
+                    type: integer
+                  conversions:
+                    type: integer
+                  rate:
+                    type: number
+              canary:
+                type: object
+                properties:
+                  total:
+                    type: integer
+                  conversions:
+                    type: integer
+                  rate:
+                    type: number
+              improvement:
+                type: number
+                description: Conversion rate improvement (canary - baseline)
+
+  /canary/promote:
+    post:
+      summary: Promote Canary to Baseline
+      description: Promote canary model to production baseline after successful testing
+      responses:
+        200:
+          description: Canary promoted successfully
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: canary_promoted
+              message:
+                type: string
+
+  /canary/rollback:
+    post:
+      summary: Rollback Canary Deployment
+      description: Revert to baseline model and stop canary deployment
+      responses:
+        200:
+          description: Canary rolled back
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: canary_rolled_back
+              message:
+                type: string
+
+definitions:
+  RecommendRequest:
+    type: object
+    required:
+      - age
+      - job
+      - marital
+      - education
+      - contact
+      - campaign
+    properties:
+      age:
+        type: integer
+        minimum: 0
+        maximum: 150
+        description: Customer age
+        example: 35
+      job:
+        type: string
+        description: Customer job (admin, director, retired, etc)
+        example: admin
+      marital:
+        type: string
+        description: Marital status
+        example: married
+      education:
+        type: string
+        description: Education level
+        example: university.degree
+      contact:
+        type: string
+        description: Contact type
+        enum:
+          - cellular
+          - telephone
+        example: cellular
+      campaign:
+        type: integer
+        minimum: 1
+        description: Number of contact attempts
+        example: 1
+
+  RecommendResponse:
+    type: object
+    properties:
+      recommended_arm:
+        type: integer
+        description: Selected arm (0-3)
+        example: 0
+      arm_name:
+        type: string
+        description: Arm name
+        example: Cellular_1x
+      expected_conversion:
+        type: number
+        description: Expected conversion rate
+        example: 0.15
+      context:
+        type: object
+        description: Customer context
+        properties:
+          age_group:
+            type: string
+            example: Prime
+          job_category:
+            type: string
+            example: Technical
+      rationale:
+        type: string
+        description: Explanation
+        example: Contextual Thompson Sampling for Prime + Technical recommends...
