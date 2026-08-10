@@ -18,60 +18,60 @@
     "recommendation": {
       "arm_id": 0,
       "arm_name": "Cellular_Standard",
-      "expected_conversion_rate": 22.45,
-      "context_conversion_rate": 15.8,
-      "rationale": "Thompson Sampling recommends Cellular_Standard for Young + Technical segment (expected 22.5% conversion)"
+      "expected_conversion_rate": 19.61,
+      "context_conversion_rate": 13.72,
+      "rationale": "Thompson Sampling recommends Cellular_Standard for Young + Technical segment (expected 19.6% conversion)"
     },
     "arm_rankings": [
       {
         "arm_id": 0,
         "arm_name": "Cellular_Standard",
-        "rate": 0.22453222453220117,
-        "trials": 962,
-        "successes": 216
+        "rate": 0.19607843137253364,
+        "trials": 1275,
+        "successes": 250
       },
       {
         "arm_id": 1,
         "arm_name": "Email_Campaign",
-        "rate": 0.18723761544918663,
-        "trials": 1191,
-        "successes": 223
+        "rate": 0.16855345911948624,
+        "trials": 1590,
+        "successes": 268
       },
       {
         "arm_id": 2,
         "arm_name": "SMS_Alert",
-        "rate": 0.07880434782606555,
-        "trials": 368,
-        "successes": 29
+        "rate": 0.065217391304336,
+        "trials": 552,
+        "successes": 36
       },
       {
         "arm_id": 3,
         "arm_name": "Call_Premium",
-        "rate": 0.04647435897435152,
-        "trials": 624,
-        "successes": 29
+        "rate": 0.041479820627798036,
+        "trials": 892,
+        "successes": 37
       }
     ],
     "arm_details": {
       "Cellular_Standard": {
-        "rate": 22.45,
-        "trials": 962,
-        "successes": 216
+        "rate": 19.61,
+        "trials": 1275,
+        "successes": 250
       },
       "Email_Campaign": {
-        "rate": 18.72,
-        "trials": 1191,
-        "successes": 223
+        "rate": 16.86,
+        "trials": 1590,
+        "successes": 268
       },
       "SMS_Alert": {
-        "rate": 7.88,
-        "trials": 368,
-        "successes": 29
+        "rate": 6.52,
+        "trials": 552,
+        "successes": 36
       },
       "Call_Premium": {
-        "rate": 4.65,
-        "trials": 624,
-        "successes": 29
+        "rate": 4.15,
+        "trials": 892,
+        "successes": 37
       }
     }
   },
@@ -81,7 +81,7 @@
       "name": "Prime Business Executive",
       "description": "Senior manager, multiple contact attempts",
       "age": 42,
-      "job": "director",
+      "job": "management",
       "marital": "married",
       "education": "university.degree",
       "contact": "cellular",
@@ -170,59 +170,59 @@
     "recommendation": {
       "arm_id": 0,
       "arm_name": "Cellular_Standard",
-      "expected_conversion_rate": 47.49,
-      "context_conversion_rate": 41.11,
-      "rationale": "Thompson Sampling recommends Cellular_Standard for Senior + Other segment (expected 47.5% conversion)"
+      "expected_conversion_rate": 48.38,
+      "context_conversion_rate": 42.2,
+      "rationale": "Thompson Sampling recommends Cellular_Standard for Senior + Other segment (expected 48.4% conversion)"
     },
     "arm_rankings": [
       {
         "arm_id": 0,
         "arm_name": "Cellular_Standard",
-        "rate": 0.47494033412876496,
-        "trials": 419,
-        "successes": 199
+        "rate": 0.48379052369065245,
+        "trials": 401,
+        "successes": 194
       },
       {
         "arm_id": 1,
         "arm_name": "Email_Campaign",
-        "rate": 0.41176470588224284,
-        "trials": 374,
-        "successes": 154
-      },
-      {
-        "arm_id": 3,
-        "arm_name": "Call_Premium",
-        "rate": 0.22988505747100013,
-        "trials": 87,
-        "successes": 20
+        "rate": 0.4232954545453343,
+        "trials": 352,
+        "successes": 149
       },
       {
         "arm_id": 2,
         "arm_name": "SMS_Alert",
-        "rate": 0.220338983050474,
-        "trials": 59,
+        "rate": 0.24074074074029492,
+        "trials": 54,
         "successes": 13
+      },
+      {
+        "arm_id": 3,
+        "arm_name": "Call_Premium",
+        "rate": 0.23809523809495464,
+        "trials": 84,
+        "successes": 20
       }
     ],
     "arm_details": {
       "Cellular_Standard": {
-        "rate": 47.49,
-        "trials": 419,
-        "successes": 199
+        "rate": 48.38,
+        "trials": 401,
+        "successes": 194
       },
       "Email_Campaign": {
-        "rate": 41.18,
-        "trials": 374,
-        "successes": 154
+        "rate": 42.33,
+        "trials": 352,
+        "successes": 149
       },
       "SMS_Alert": {
-        "rate": 22.03,
-        "trials": 59,
+        "rate": 24.07,
+        "trials": 54,
         "successes": 13
       },
       "Call_Premium": {
-        "rate": 22.99,
-        "trials": 87,
+        "rate": 23.81,
+        "trials": 84,
         "successes": 20
       }
     }
@@ -235,7 +235,7 @@
       "age": 52,
       "job": "technician",
       "marital": "married",
-      "education": "secondary",
+      "education": "professional.course",
       "contact": "cellular",
       "campaign": 3
     },
@@ -246,70 +246,70 @@
     "recommendation": {
       "arm_id": 0,
       "arm_name": "Cellular_Standard",
-      "expected_conversion_rate": 14.44,
-      "context_conversion_rate": 10.1,
-      "rationale": "Thompson Sampling recommends Cellular_Standard for Mature + Technical segment (expected 14.4% conversion)"
+      "expected_conversion_rate": 12.74,
+      "context_conversion_rate": 8.91,
+      "rationale": "Thompson Sampling recommends Cellular_Standard for Mature + Technical segment (expected 12.7% conversion)"
     },
     "arm_rankings": [
       {
         "arm_id": 0,
         "arm_name": "Cellular_Standard",
-        "rate": 0.14435146443513638,
-        "trials": 1434,
-        "successes": 207
+        "rate": 0.1273674242424182,
+        "trials": 2112,
+        "successes": 269
       },
       {
         "arm_id": 1,
         "arm_name": "Email_Campaign",
-        "rate": 0.11422527763087709,
-        "trials": 1891,
-        "successes": 216
+        "rate": 0.10304789550072195,
+        "trials": 2756,
+        "successes": 284
       },
       {
         "arm_id": 3,
         "arm_name": "Call_Premium",
-        "rate": 0.052331113225494545,
-        "trials": 1051,
-        "successes": 55
+        "rate": 0.05081874647091751,
+        "trials": 1771,
+        "successes": 90
       },
       {
         "arm_id": 2,
         "arm_name": "SMS_Alert",
-        "rate": 0.050632911392397936,
-        "trials": 711,
-        "successes": 36
+        "rate": 0.045454545454541626,
+        "trials": 1188,
+        "successes": 54
       }
     ],
     "arm_details": {
       "Cellular_Standard": {
-        "rate": 14.44,
-        "trials": 1434,
-        "successes": 207
+        "rate": 12.74,
+        "trials": 2112,
+        "successes": 269
       },
       "Email_Campaign": {
-        "rate": 11.42,
-        "trials": 1891,
-        "successes": 216
+        "rate": 10.3,
+        "trials": 2756,
+        "successes": 284
       },
       "SMS_Alert": {
-        "rate": 5.06,
-        "trials": 711,
-        "successes": 36
+        "rate": 4.55,
+        "trials": 1188,
+        "successes": 54
       },
       "Call_Premium": {
-        "rate": 5.23,
-        "trials": 1051,
-        "successes": 55
+        "rate": 5.08,
+        "trials": 1771,
+        "successes": 90
       }
     }
   },
   {
     "id": 5,
     "profile": {
-      "name": "Prime Technical Professional",
-      "description": "Service worker, first phone contact",
+      "name": "Prime Other Professional",
+      "description": "Job seeker between employment, first phone contact",
       "age": 35,
-      "job": "services",
+      "job": "unemployed",
       "marital": "divorced",
       "education": "basic.9y",
       "contact": "telephone",
@@ -317,65 +317,65 @@
     },
     "context": {
       "age_group": "Prime",
-      "job_category": "Technical"
+      "job_category": "Other"
     },
     "recommendation": {
-      "arm_id": 0,
-      "arm_name": "Cellular_Standard",
-      "expected_conversion_rate": 15.0,
-      "context_conversion_rate": 10.48,
-      "rationale": "Thompson Sampling recommends Cellular_Standard for Prime + Technical segment (expected 15.0% conversion)"
+      "arm_id": 1,
+      "arm_name": "Email_Campaign",
+      "expected_conversion_rate": 15.85,
+      "context_conversion_rate": 10.78,
+      "rationale": "Thompson Sampling recommends Email_Campaign for Prime + Other segment (expected 15.9% conversion)"
     },
     "arm_rankings": [
       {
-        "arm_id": 0,
-        "arm_name": "Cellular_Standard",
-        "rate": 0.14997336174746537,
-        "trials": 3754,
-        "successes": 563
-      },
-      {
         "arm_id": 1,
         "arm_name": "Email_Campaign",
-        "rate": 0.11850752596989361,
-        "trials": 4717,
-        "successes": 559
+        "rate": 0.15850815850812155,
+        "trials": 429,
+        "successes": 68
+      },
+      {
+        "arm_id": 0,
+        "arm_name": "Cellular_Standard",
+        "rate": 0.14088397790051357,
+        "trials": 362,
+        "successes": 51
       },
       {
         "arm_id": 2,
         "arm_name": "SMS_Alert",
-        "rate": 0.06177370030580662,
-        "trials": 1635,
-        "successes": 101
+        "rate": 0.05384615384613314,
+        "trials": 260,
+        "successes": 14
       },
       {
         "arm_id": 3,
         "arm_name": "Call_Premium",
-        "rate": 0.042537030003796335,
-        "trials": 2633,
-        "successes": 112
+        "rate": 0.048338368580045823,
+        "trials": 331,
+        "successes": 16
       }
     ],
     "arm_details": {
       "Cellular_Standard": {
-        "rate": 15.0,
-        "trials": 3754,
-        "successes": 563
+        "rate": 14.09,
+        "trials": 362,
+        "successes": 51
       },
       "Email_Campaign": {
-        "rate": 11.85,
-        "trials": 4717,
-        "successes": 559
+        "rate": 15.85,
+        "trials": 429,
+        "successes": 68
       },
       "SMS_Alert": {
-        "rate": 6.18,
-        "trials": 1635,
-        "successes": 101
+        "rate": 5.38,
+        "trials": 260,
+        "successes": 14
       },
       "Call_Premium": {
-        "rate": 4.25,
-        "trials": 2633,
-        "successes": 112
+        "rate": 4.83,
+        "trials": 331,
+        "successes": 16
       }
     }
   }

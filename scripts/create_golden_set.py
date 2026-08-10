@@ -63,7 +63,7 @@ def create_golden_set():
         {
             "name": "Prime Business Executive",
             "age": 42,
-            "job": "director",
+            "job": "management",
             "marital": "married",
             "education": "university.degree",
             "contact": "cellular",
@@ -85,7 +85,7 @@ def create_golden_set():
             "age": 52,
             "job": "technician",
             "marital": "married",
-            "education": "secondary",
+            "education": "professional.course",
             "contact": "cellular",
             "campaign": 3,
             "description": "Experienced technician, repeated contact"
@@ -93,12 +93,12 @@ def create_golden_set():
         {
             "name": "Prime Other Professional",
             "age": 35,
-            "job": "services",
+            "job": "unemployed",
             "marital": "divorced",
             "education": "basic.9y",
             "contact": "telephone",
             "campaign": 1,
-            "description": "Service worker, first phone contact"
+            "description": "Job seeker between employment, first phone contact"
         }
     ]
 

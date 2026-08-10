@@ -109,7 +109,7 @@ def show_overview():
     with col2:
         st.metric("Contextos", "12", "4 ages × 3 jobs")
     with col3:
-        st.metric("Testes", "22/22", "✅ Passando")
+        st.metric("Testes", "60/60", "✅ Passando")
     with col4:
         st.metric("Conversão", "11.27%", "Média geral")
 
@@ -133,7 +133,7 @@ def show_overview():
         - **Contextos**: Segmenta por idade + profissão (12 contextos)
         - **Campanhas**: 4 estratégias diferentes (Cellular, Email, SMS, Premium Call)
         - **Recomendação**: Melhor campanha por contexto
-        - **Resultado**: Até 47% conversão em melhores segmentos
+        - **Resultado**: Até 42% conversão em melhores segmentos
         """)
 
     st.markdown("---")
@@ -241,13 +241,9 @@ def show_data():
         st.subheader("Taxa de Conversão por Contexto (Treino)")
 
         age_groups = pd.cut(df_train['age'], bins=[0, 30, 45, 60, 150],
-                            labels=['Young (18-30)', 'Prime (30-45)', 'Mature (45-60)', 'Senior (60+)'])
+                            labels=['Young (17-30)', 'Prime (30-45)', 'Mature (45-60)', 'Senior (60+)'])
 
-        job_categories = df_train['job'].apply(
-            lambda x: 'Technical' if any(j in x.lower() for j in ['admin', 'technician', 'engineer', 'scientist', 'services'])
-            else ('Business' if any(j in x.lower() for j in ['management', 'director', 'entrepreneur', 'self-employed'])
-            else 'Other')
-        )
+        job_categories = df_train['job'].apply(ContextualThompsonSampling._get_job_category)
 
         conversion_pivot = pd.DataFrame({
             'age_group': age_groups,
@@ -277,13 +273,9 @@ def show_data():
         st.subheader("Taxa de Conversão por Contexto (Teste)")
 
         age_groups = pd.cut(df_test['age'], bins=[0, 30, 45, 60, 150],
-                            labels=['Young (18-30)', 'Prime (30-45)', 'Mature (45-60)', 'Senior (60+)'])
+                            labels=['Young (17-30)', 'Prime (30-45)', 'Mature (45-60)', 'Senior (60+)'])
 
-        job_categories = df_test['job'].apply(
-            lambda x: 'Technical' if any(j in x.lower() for j in ['admin', 'technician', 'engineer', 'scientist', 'services'])
-            else ('Business' if any(j in x.lower() for j in ['management', 'director', 'entrepreneur', 'self-employed'])
-            else 'Other')
-        )
+        job_categories = df_test['job'].apply(ContextualThompsonSampling._get_job_category)
 
         conversion_pivot = pd.DataFrame({
             'age_group': age_groups,
@@ -436,13 +428,16 @@ def show_api_testing():
     col1, col2 = st.columns(2)
 
     with col1:
-        age = st.slider("Idade", 18, 95, 35)
-        job = st.selectbox("Profissão", ['admin', 'technician', 'director', 'retired',
-                                         'management', 'entrepreneur', 'services', 'unknown'])
+        age = st.slider("Idade", 17, 98, 35)
+        job = st.selectbox("Profissão", ['admin.', 'blue-collar', 'technician', 'services',
+                                         'management', 'retired', 'entrepreneur', 'self-employed',
+                                         'housemaid', 'unemployed', 'student', 'unknown'])
 
     with col2:
-        marital = st.selectbox("Estado civil", ['single', 'married', 'divorced'])
-        education = st.selectbox("Educação", ['primary', 'secondary', 'tertiary', 'unknown'])
+        marital = st.selectbox("Estado civil", ['married', 'single', 'divorced', 'unknown'])
+        education = st.selectbox("Educação", ['university.degree', 'high.school', 'basic.9y',
+                                              'professional.course', 'basic.4y', 'basic.6y',
+                                              'unknown', 'illiterate'])
 
     contact = st.radio("Tipo de contato", ['cellular', 'telephone'], horizontal=True)
     campaign = st.number_input("Número de campanhas", 1, 10, 1)

@@ -27,8 +27,8 @@ baseline.
 | Métrica | Valor |
 |---|---|
 | Baseline → Thompson Sampling | 11,27% → 14,97% (+3,70 p.p.) |
-| Melhor contexto | Senior + Other, 41,1% |
-| Pior contexto | 7,5% |
+| Melhor contexto | Senior + Other, 42,2% |
+| Pior contexto | 8,7% |
 | Testes automatizados | 60/60 passando |
 | Golden set | 5 perfis validados |
 
@@ -37,7 +37,7 @@ baseline.
 Cada um dos 12 contextos mantém uma distribuição Beta por estratégia de contato. Para cada cliente
 novo, o modelo amostra uma probabilidade de sucesso por estratégia, escolhe a de maior valor
 amostrado, observa se converteu de verdade, e atualiza a distribuição. É esse mecanismo de
-exploração/explotação que faz a conversão variar de 7,5% no pior contexto até 41,1% no melhor —
+exploração/explotação que faz a conversão variar de 8,7% no pior contexto até 42,2% no melhor —
 uma diferença que uma política única, sem contexto, nunca capturaria.
 
 A base real só tem dois canais (`cellular`, `telephone`); os 4 "braços" do bandit são esses dois
@@ -55,9 +55,9 @@ demo ao vivo (Swagger) mostra dois perfis diferentes recebendo recomendações d
 Modelos são retreinados com dados novos, e isso pode mudar a recomendação. Ordenamos o dataset
 pela data real de contato e comparamos um snapshot treinado só com os primeiros 70% dos contatos
 com o modelo final, treinado com a campanha completa. Para clientes jovens em cargos técnicos, o
-snapshot antigo recomendava campanha por e-mail (11,67% de conversão esperada); com mais dados
-reais o modelo passa a recomendar contato celular padrão (22,51%) — quase o dobro, e troca a oferta
-vencedora. É uma troca real, medida nos dados, não simulada.
+snapshot antigo recomendava campanha por e-mail (10,72% de conversão esperada); com mais dados
+reais o modelo passa a recomendar contato celular padrão (19,66%) — quase 1,8x maior, e troca a
+oferta vencedora. É uma troca real, medida nos dados, não simulada.
 
 É exatamente esse tipo de mudança que o canary deploy existe para validar: a API expõe a nova
 versão a uma fração do tráfego, monitora se ela realmente converte melhor, e só promove para

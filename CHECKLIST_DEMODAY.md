@@ -30,13 +30,13 @@ em [`docs/DECISOES_THOMPSON_E_ARMS.md`](docs/DECISOES_THOMPSON_E_ARMS.md).
 [`data/golden_set/golden_set.json`](data/golden_set/golden_set.json) e a tabela "Golden set — 5
 perfis validados" no [`README.md`](README.md#golden-set--5-perfis-validados): 5 perfis de cliente,
 a oferta recomendada para cada um e por que faz sentido (ex.: aposentado sênior → melhor
-conversão, 47,5%).
+conversão, 48,4%).
 
 ## 5. Código executável que retorna a predição
 
 `POST /recommend` (Flask + Swagger, `src/datathon/api/app.py`). Testado ao vivo em
 `http://localhost:5000/apidocs` — perfil de exemplo (35 anos, admin, casado, celular) devolve
-`Cellular_Standard` com 15% de conversão esperada:
+`Cellular_Standard` com 13,8% de conversão esperada:
 
 ![Resposta real do POST /recommend no Swagger](docs/screenshots/swagger_recommend_response.jpg)
 

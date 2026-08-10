@@ -148,13 +148,13 @@ class TestRecommendEndpoint:
         """
         TEST: Recommend for prime business executive
 
-        Profile: age=42, job=director
+        Profile: age=42, job=management
         Expected context: Prime + Business
         """
         # ARRANGE
         customer = {
             "age": 42,
-            "job": "director",
+            "job": "management",
             "marital": "married",
             "education": "university.degree",
             "contact": "cellular",
@@ -434,7 +434,7 @@ class TestIntegration:
         # ARRANGE
         profiles = [
             {"age": 25, "job": "admin"},           # Young + Technical
-            {"age": 40, "job": "director"},        # Prime + Business
+            {"age": 40, "job": "management"},      # Prime + Business
             {"age": 70, "job": "retired"},         # Senior + Other
         ]
 

@@ -271,7 +271,7 @@ já rotula cada requisição com `revision_name` sem nenhuma instrumentação ad
 - **Mudança de modelo** (novo `thompson_model_vX.json`): `update-traffic` sob controle do pipeline de
   gate (7.2). O critério é estatístico e pode levar dias. É exatamente o caso `Young_Technical`
   descrito em `CANARY_DEMO_GUIDE.md`, em que o retreino com o dataset completo inverte o arm vencedor
-  (Email_Campaign, 11,67% → Cellular_Standard, 22,51%) com um ganho de +10,84 pp. O efeito é grande,
+  (Email_Campaign, 10,72% → Cellular_Standard, 19,66%) com um ganho de +8,94 pp. O efeito é grande,
   mas o gate não sabe disso de antemão — só o teste estatístico sobre tráfego real acumulado ao longo
   de dias distingue esse caso de um retreino que produzisse apenas ruído de amostragem do posterior
   Beta.
@@ -717,7 +717,7 @@ próxima do configurado que no caso do alias de Lambda. Ainda assim, o problema 
 **estatística, não de mecanismo de roteamento**: no cenário A (30.000 chamadas/mês), 5% de canary são
 ~1.500 decisões/mês, e um qui-quadrado sobre ~1.500 observações nem sempre tem poder para concluir —
 quanto menor a diferença real entre os braços, mais observações o teste exige. Efeitos grandes, como
-os +10,84 pp do caso `Young_Technical` (`CANARY_DEMO_GUIDE.md`), convergem mais rápido; um retreino que
+os +8,94 pp do caso `Young_Technical` (`CANARY_DEMO_GUIDE.md`), convergem mais rápido; um retreino que
 só mudasse a conversão esperada em décimos de ponto percentual exigiria muito mais volume, e o tamanho
 do efeito de um retreino específico não é conhecido antes de medir. Consequências práticas: em volume
 baixo, use um percentual de canary **maior** (20–50%, como o split 50/50 que o `CANARY_DEMO_GUIDE.md`

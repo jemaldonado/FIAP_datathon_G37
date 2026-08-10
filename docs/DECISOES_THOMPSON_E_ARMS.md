@@ -22,7 +22,7 @@ seja justificada. Escolhemos Thompson Sampling (Beta-Bernoulli) por três motivo
    intuitivo de justificar para uma audiência de negócio do que "o modelo ainda não viu dado
    suficiente desse braço".
 3. **Com 12 contextos e só 41 mil clientes, alguns contextos têm poucas amostras** (o contexto
-   `Senior + Business` tem 96 clientes contra 6.689 de `Prime + Other`). Thompson Sampling se
+   `Senior + Business` tem 96 clientes contra 18.046 de `Prime + Technical`). Thompson Sampling se
    comporta bem nesse regime de poucos dados por construção — a posterior larga de um contexto
    com poucos trials já reflete a incerteza real, sem precisar de um epsilon separado por contexto.
 
@@ -32,8 +32,8 @@ com um epsilon decrescente, no mesmo dado.
 
 ## Por que contextual (12 contextos), e não um bandit único
 
-Um bandit único aprenderia "qual braço é melhor em média" — mas a conversão varia de 7,5% (pior
-contexto) a 41,1% (melhor contexto), mais de 30 pontos percentuais de diferença. Uma política única
+Um bandit único aprenderia "qual braço é melhor em média" — mas a conversão varia de 8,7% (pior
+contexto) a 42,2% (melhor contexto), mais de 30 pontos percentuais de diferença. Uma política única
 sem contexto nunca captura isso: ela convergiria para o braço melhor "na média geral", que pode ser
 o pior braço para um contexto específico. Por isso `ContextualThompsonSampling` mantém 12 bandits
 Beta-Bernoulli independentes — um por combinação de `age_group` (Young/Prime/Mature/Senior) ×

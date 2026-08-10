@@ -173,7 +173,7 @@ if page == "Visão Geral":
                  help="4 grupos_idade × 3 categorias_trabalho")
 
     with col3:
-        st.metric("✅ Status Testes", "45/45", help="Todos os testes passando")
+        st.metric("✅ Status Testes", "60/60", help="Todos os testes passando")
 
     with col4:
         conversion_rate = f"{df['y'].mean()*100:.2f}%" if df is not None else "N/A"
@@ -212,7 +212,7 @@ if page == "Visão Geral":
     ### Status
     - Modelo: Thompson Sampling com 12 contextos
     - Dados: 41.188 clientes
-    - Testes: 45/45 passando ✅
+    - Testes: 60/60 passando ✅
     """)
 
 # ============================================================================
@@ -506,10 +506,12 @@ elif page == "Demo da API":
         col1, col2, col3 = st.columns(3)
 
         with col1:
-            age = st.number_input("Idade", min_value=18, max_value=100, value=35)
+            age = st.number_input("Idade", min_value=17, max_value=98, value=35)
 
         with col2:
-            job_options = ['admin', 'technician', 'director', 'retired', 'student', 'unemployed']
+            job_options = ['admin.', 'blue-collar', 'technician', 'services', 'management',
+                           'retired', 'entrepreneur', 'self-employed', 'housemaid',
+                           'unemployed', 'student', 'unknown']
             job = st.selectbox("Trabalho", job_options)
 
         with col3:

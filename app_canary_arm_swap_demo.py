@@ -6,11 +6,11 @@ Focused, visual walkthrough of a single real finding: comparing a snapshot
 trained on the first 70% of contacts in real chronological order (the
 "baseline") with the model retrained on ALL available data (the
 "candidate"), the Thompson Sampling model changes its favorite offer for
-the Young_Technical customer segment (age 18-29, job in admin/technician/
-engineer/scientist/services).
+the Young_Technical customer segment (age 17-29, job in admin./blue-collar/
+technician/services).
 
-    baseline (70% cronológico): Email_Campaign    (~11.67% expected conversion)
-    candidato (100%):           Cellular_Standard  (~22.51% expected conversion)
+    baseline (70% cronológico): Email_Campaign    (~10.72% expected conversion)
+    candidato (100%):           Cellular_Standard  (~19.66% expected conversion)
 
 The bank-marketing dataset is ordered by real contact date, so this is a
 genuine "what the model knew earlier vs. after more data" comparison — not
@@ -54,8 +54,8 @@ CONTEXT = ("Young", "Technical")
 BASELINE_MODEL_PATH = "data/models/thompson_model_baseline_temporal.json"
 
 # Real customer profile that maps to the Young_Technical context:
-# age_group='Young' -> 18 <= age < 30, job_category='Technical' -> job in
-# ['admin', 'technician', 'engineer', 'scientist', 'services'].
+# age_group='Young' -> 17 <= age < 30, job_category='Technical' -> job in
+# ['admin', 'technician', 'blue-collar', 'services'].
 CUSTOMER = {
     "age": 28,
     "job": "admin",
@@ -119,8 +119,8 @@ def static_comparison():
 
 st.markdown("# 🔀 Canary Deployment — A Real Arm Swap")
 st.markdown(
-    "**Segmento `Young_Technical`** (idade 18-29, cargo admin/technician/engineer/"
-    "scientist/services): o retreino muda a oferta vencedora. Baseline = primeiros 70% dos "
+    "**Segmento `Young_Technical`** (idade 17-29, cargo admin./blue-collar/technician/"
+    "services): o retreino muda a oferta vencedora. Baseline = primeiros 70% dos "
     "contatos em ordem cronológica real; candidato = todos os dados disponíveis."
 )
 
@@ -281,9 +281,9 @@ st.markdown("""
 O dataset bank-marketing é ordenado pela data real de contato. O "baseline" desta demo é
 literalmente o que o modelo teria aprendido num ponto anterior da campanha (primeiros 70% dos
 contatos); o "candidato" incorpora o resto da campanha, incluindo um período de conversão
-muito mais alta (a taxa geral do contexto quase dobra: ~7% → ~16%). Com mais — e mais recente —
-evidência real, a oferta que parecia melhor deixa de ser: Cellular_Standard passa de 7.6% pra
-22.5%, ultrapassando Email_Campaign, que só vai de 11.5% pra 18.7%.
+muito mais alta (a taxa geral do contexto mais que dobra: ~7% → ~14%). Com mais — e mais recente —
+evidência real, a oferta que parecia melhor deixa de ser: Cellular_Standard passa de 7.3% pra
+19.6%, ultrapassando Email_Campaign, que só vai de 10.6% pra 16.9%.
 
 Isso é o ponto central da demo: **o retreino com dados adicionais desloca a maioria** — o
 braço que antes vencia na maior parte das vezes passa a perder, porque a nova evidência real

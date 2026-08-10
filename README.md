@@ -20,8 +20,8 @@ Este projeto implementa um multi-armed bandit contextual para otimizar estratég
 |---------|-----------|
 | Clientes analisados | 41.188 |
 | Taxa de conversão geral | 11,27% |
-| Melhor contexto | Senior + Other = 41,11% |
-| Spread de conversão | 33,6 p.p. (6x melhor que pior) |
+| Melhor contexto | Senior + Other = 42,20% |
+| Spread de conversão | 33,5 p.p. (~4,9x melhor que pior) |
 | Contextos únicos | 12 (4 age_groups × 3 job_categories) |
 | Testes automatizados | 60/60 passando |
 
@@ -159,14 +159,16 @@ estratégias para cada perfil:
 
 | Perfil | Contexto | Melhor arm | Conversão | 2º melhor | 3º melhor |
 |--------|----------|-----------|-----------|-----------|-----------|
-| Jovem Técnico | Young + Technical | Cellular_Standard | 22,5% | Email (18,7%) | SMS (7,9%) |
+| Jovem Técnico | Young + Technical | Cellular_Standard | 19,6% | Email (16,9%) | SMS (6,5%) |
 | Executivo Prime | Prime + Business | Cellular_Standard | 15,0% | Email (11,2%) | SMS (7,4%) |
-| Aposentado Senior | Senior + Other | Cellular_Standard | 47,5% | Email (41,2%) | Premium (23%) |
-| Técnico Maduro | Mature + Technical | Cellular_Standard | 14,4% | Email (11,4%) | Premium (5,2%) |
-| Prof. Serviços | Prime + Technical | Cellular_Standard | 15,0% | Email (11,9%) | SMS (6,2%) |
+| Aposentado Senior | Senior + Other | Cellular_Standard | 48,4% | Email (42,3%) | Premium (23,8%) |
+| Técnico Maduro | Mature + Technical | Cellular_Standard | 12,7% | Email (10,3%) | Premium (5,1%) |
+| Profissional em Transição | Prime + Other | Email_Campaign | 15,9% | Cellular (14,1%) | SMS (5,4%) |
 
-Mesmo para o melhor contexto (Senior+Other=47,5%), Email é 2º lugar com 41,2%. Thompson não
-escolhe Email como melhor porque Cellular ainda é superior globalmente.
+Mesmo para o melhor contexto (Senior+Other=48,4%), Email é 2º lugar com 42,3%. Thompson não
+escolhe Email como melhor porque Cellular ainda é superior globalmente. Já no contexto
+Prime+Other, Email de fato vence — mostrando que a recomendação muda de verdade por contexto,
+não é sempre "Cellular ganha".
 
 Arquivo: `data/golden_set/golden_set.json`
 
@@ -338,12 +340,12 @@ FIAP_datathon_G37/
 
 | Posição | Contexto | Conversão | Clientes | Observação |
 |---------|----------|-----------|----------|----------|
-| 1 | Senior + Other | 41,1% | 939 | alvo prioritário |
-| 2 | Senior + Technical | 36,2% | 163 | seniors muito valiosos |
-| 3 | Senior + Business | 30,2% | 96 | seniors em geral melhores |
-| 4 | Young + Other | 17,7% | 2.050 | jovens secundários |
+| 1 | Senior + Other | 42,2% | 891 | alvo prioritário |
+| 2 | Senior + Technical | 32,5% | 206 | seniors muito valiosos |
+| 3 | Young + Other | 30,3% | 891 | jovens fora do mercado de trabalho formal |
+| 4 | Senior + Business | 30,2% | 96 | seniors em geral melhores |
 | ... | ... | ... | ... | ... |
-| 12 | Prime + Other | 7,5% | 6.689 | evitar |
+| 12 | Mature + Business | 8,7% | 2.079 | evitar |
 
 ---
 

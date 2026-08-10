@@ -88,7 +88,7 @@ def desk_test(model: ContextualThompsonSampling, df: pd.DataFrame) -> None:
 
     test_cases = [
         {'age': 28, 'job': 'admin', 'name': 'Young + Technical'},
-        {'age': 38, 'job': 'director', 'name': 'Prime + Business'},
+        {'age': 38, 'job': 'management', 'name': 'Prime + Business'},
         {'age': 72, 'job': 'retired', 'name': 'Senior + Other'},
         {'age': 55, 'job': 'technician', 'name': 'Mature + Technical'},
     ]

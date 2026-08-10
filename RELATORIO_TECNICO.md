@@ -151,10 +151,10 @@ Clusters, Vertex AI Training seriam desproporcionais).
   `scripts/retrain_model.py`.
 - **Canary deploy:** [`docs/CANARY_DEPLOY_EXPLAINED.md`](docs/CANARY_DEPLOY_EXPLAINED.md). Caso
   real de troca de braço vencedor após retreino: contexto `Young_Technical`
-  (idade 18–29, cargo admin/technician/engineer/scientist/services) — um snapshot treinado
+  (idade 17–29, cargo admin./blue-collar/technician/services) — um snapshot treinado
   com os primeiros 70% dos contatos em ordem cronológica real recomenda `Email_Campaign`
-  (11,67%), o candidato treinado com todos os dados disponíveis recomenda `Cellular_Standard`
-  (22,51%). O corte é temporal (ordem real de contato, ver `--temporal-cutoff` em
+  (10,72%), o candidato treinado com todos os dados disponíveis recomenda `Cellular_Standard`
+  (19,66%). O corte é temporal (ordem real de contato, ver `--temporal-cutoff` em
   `scripts/retrain_model.py`), não uma amostra aleatória embaralhada — uma versão anterior
   desta demo usava reamostragem aleatória da mesma base, o que é ruído, não dado novo (corrigido
   após auditoria 2026-08-05). Demonstrável com `python scripts/demo_arm_swap_case.py` ou

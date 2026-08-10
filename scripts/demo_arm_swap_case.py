@@ -5,12 +5,12 @@ Demo: a real customer segment where retraining flips the recommended offer.
 Comparing data/models/thompson_model_baseline_temporal.json (a snapshot
 trained on the first 70% of contacts, in real chronological order) with
 data/models/thompson_model_v2.json (retrained candidate, trained on ALL
-available data) shows one segment, Young_Technical (age 18-29, job in
-admin/technician/engineer/scientist/services), where the winning arm
+available data) shows one segment, Young_Technical (age 17-29, job in
+admin./blue-collar/technician/services), where the winning arm
 actually changes:
 
-    baseline (70% cronológico): Email_Campaign    (~11.67% expected conversion)
-    v2 (100%, todos os dados):  Cellular_Standard  (~22.51% expected conversion)
+    baseline (70% cronológico): Email_Campaign    (~10.72% expected conversion)
+    v2 (100%, todos os dados):  Cellular_Standard  (~19.66% expected conversion)
 
 The bank-marketing dataset is ordered by real contact date (day/month; see
 UCI docs), so the baseline snapshot is genuinely "what the model would have
@@ -51,8 +51,8 @@ API_URL = "http://localhost:5000"
 CONTEXT = ("Young", "Technical")
 
 # Real customer profile that maps to the Young_Technical context:
-# age_group='Young' -> 18 <= age < 30, job_category='Technical' -> job in
-# ['admin', 'technician', 'engineer', 'scientist', 'services'] (see
+# age_group='Young' -> 17 <= age < 30, job_category='Technical' -> job in
+# ['admin', 'technician', 'blue-collar', 'services'] (see
 # ContextualThompsonSampling.AGE_GROUPS / JOB_CATEGORIES).
 CUSTOMER = {
     "age": 28,

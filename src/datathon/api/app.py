@@ -253,20 +253,10 @@ def select_arm(age, job, contact, campaign):
     else:
         arm = 2 if campaign == 1 else 3
 
-    # Map job to job_category for fallback
-    job_lower = job.lower()
-    technical_jobs = ['admin', 'technician', 'engineer', 'scientist', 'services']
-    business_jobs = ['management', 'director', 'entrepreneur', 'self-employed']
-
-    if any(j in job_lower for j in technical_jobs):
-        job_category = 'Technical'
-    elif any(j in job_lower for j in business_jobs):
-        job_category = 'Business'
-    else:
-        job_category = 'Other'
-
-    # Age group for fallback
-    age_group = "Young" if age < 30 else ("Prime" if age < 45 else ("Mature" if age < 60 else "Senior"))
+    # Job/age category for fallback — reuse the model's own mapping (single
+    # source of truth) instead of a hand-copied list.
+    job_category = ContextualThompsonSampling._get_job_category(job)
+    age_group = ContextualThompsonSampling._get_age_group(age)
     context = (age_group, job_category)
     expected_conv = 0.12
 

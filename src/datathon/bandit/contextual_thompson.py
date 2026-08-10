@@ -110,16 +110,22 @@ class ContextualThompsonSampling:
     """
 
     AGE_GROUPS = {
-        'Young': (18, 30),
+        'Young': (17, 30),
         'Prime': (30, 45),
         'Mature': (45, 60),
         'Senior': (60, 150),
     }
 
+    # The 12 buckets below are exactly the 12 real `job` values in the UCI
+    # bank-marketing dataset (admin., blue-collar, technician, services,
+    # management, entrepreneur, self-employed, retired, unemployed, student,
+    # unknown, housemaid) — verified against value_counts(). No fictional
+    # values (e.g. engineer/scientist/director/operator, which never occur
+    # in the real data) belong here.
     JOB_CATEGORIES = {
-        'Technical': ['admin', 'technician', 'engineer', 'scientist', 'services'],
-        'Business': ['management', 'director', 'entrepreneur', 'self-employed'],
-        'Other': ['student', 'unemployed', 'retired', 'unknown', 'housemaid', 'operator'],
+        'Technical': ['admin', 'technician', 'blue-collar', 'services'],
+        'Business': ['management', 'entrepreneur', 'self-employed'],
+        'Other': ['student', 'unemployed', 'retired', 'unknown', 'housemaid'],
     }
 
     ARM_NAMES = {
@@ -137,17 +143,23 @@ class ContextualThompsonSampling:
                 context = (age_group, job_cat)
                 self.bandits[context] = BetaBernoulliBandit(n_arms=4)
 
-    def _get_age_group(self, age: int) -> str:
-        """Map age to age group"""
-        for group, (min_age, max_age) in self.AGE_GROUPS.items():
+    @staticmethod
+    def _get_age_group(age: int) -> str:
+        """Map age to age group. Static so callers outside this class (API
+        fallback, dashboards, demo scripts) can import and reuse this exact
+        logic instead of hand-copying AGE_GROUPS."""
+        for group, (min_age, max_age) in ContextualThompsonSampling.AGE_GROUPS.items():
             if min_age <= age < max_age:
                 return group
         return 'Senior'
 
-    def _get_job_category(self, job: str) -> str:
-        """Map job to job category"""
+    @staticmethod
+    def _get_job_category(job: str) -> str:
+        """Map job to job category. Static so callers outside this class (API
+        fallback, dashboards, demo scripts) can import and reuse this exact
+        logic instead of hand-copying JOB_CATEGORIES."""
         job_lower = job.lower()
-        for category, jobs in self.JOB_CATEGORIES.items():
+        for category, jobs in ContextualThompsonSampling.JOB_CATEGORIES.items():
             if any(j in job_lower for j in jobs):
                 return category
         return 'Other'

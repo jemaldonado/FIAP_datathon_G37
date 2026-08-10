@@ -243,7 +243,7 @@ Os dois tipos de mudança têm riscos diferentes e merecem gates diferentes:
 - **Mudança de modelo** (novo `thompson_model_vX.json`): **alias ponderado sob controle da Lambda de
   gate**. O critério é estatístico e pode levar dias. É exatamente o caso `Young_Technical` descrito
   em `CANARY_DEMO_GUIDE.md`, em que o retreino com o dataset completo inverte o arm vencedor
-  (Email_Campaign, 11,67% → Cellular_Standard, 22,51%) com um ganho de +10,84 pp. O efeito é grande,
+  (Email_Campaign, 10,72% → Cellular_Standard, 19,66%) com um ganho de +8,94 pp. O efeito é grande,
   mas o gate não sabe disso de antemão — o próximo retreino pode produzir um ganho assim ou um ajuste
   marginal, e só o teste estatístico sobre tráfego real acumulado ao longo de dias distingue um caso
   do outro. Nenhuma janela fixa de 5 minutos serve para essa decisão, seja o efeito grande ou pequeno.
@@ -632,7 +632,7 @@ A própria AWS avisa que o roteamento do alias é probabilístico e que *"at low
 might see a high variance between the configured and actual percentage of traffic on each version"*.
 No cenário A (30.000 chamadas/mês), 5% de canary são ~1.500 decisões/mês — e um qui-quadrado sobre
 ~1.500 observações nem sempre tem poder para concluir: quanto menor a diferença real entre os braços,
-mais observações o teste exige para confirmá-la. Efeitos grandes, como os +10,84 pp do caso
+mais observações o teste exige para confirmá-la. Efeitos grandes, como os +8,94 pp do caso
 `Young_Technical` (`CANARY_DEMO_GUIDE.md`), convergem mais rápido; um retreino que só mudasse a
 conversão esperada em décimos de ponto percentual exigiria muito mais volume — e o tamanho do efeito
 de um retreino específico não é conhecido antes de medir. Isso não é falha da

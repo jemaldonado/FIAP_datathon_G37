@@ -455,7 +455,7 @@ Depois do retreino, o pipeline roda `scripts/compare_models.py` entre o artefato
 candidato. Esse script já detecta e marca com `[ARM!]` os contextos em que o **braço vencedor muda**
 — é exatamente o caso `Young_Technical` documentado no
 [`CANARY_DEMO_GUIDE.md`](../../CANARY_DEMO_GUIDE.md), em que o retreino com o dataset completo inverte
-a oferta de `Email_Campaign` (11,67%) para `Cellular_Standard` (22,51%).
+a oferta de `Email_Campaign` (10,72%) para `Cellular_Standard` (19,66%).
 
 Esse teste vira o **gatilho de decisão** do pipeline:
 
@@ -467,7 +467,7 @@ Esse teste vira o **gatilho de decisão** do pipeline:
 Esse é o argumento de negócio do canary neste projeto específico: `compare_models.py` acusa `[ARM!]`
 tanto para trocas de braço genuínas quanto para trocas que são só ruído de amostragem do posterior
 Beta — e a comparação offline, por si só, não distingue as duas coisas. No caso `Young_Technical`, o
-ganho de +10,84 pp (11,67% → 22,51%) reflete uma tendência real do dataset (a conversão global
+ganho de +8,94 pp (10,72% → 19,66%) reflete uma tendência real do dataset (a conversão global
 praticamente dobra entre a primeira e a segunda metade do período de campanha), não sorte do
 amostrador — mas isso só pôde ser confirmado observando tráfego real, não pela leitura do artefato
 candidato isolado. Promover às cegas qualquer troca de braço, grande ou pequena, é apostar a receita
@@ -738,7 +738,7 @@ Este documento descreve o alvo. O que **hoje** não está implementado, dito sem
   sempre é sinal — pode ser ruído do amostrador em vez de uma mudança real na distribuição de
   conversão. O teste qui-quadrado protege contra isso, mas exige volume: com 5% de tráfego sobre
   100 mil chamadas/dia são ~5.000 decisões/dia no canary, volume que detecta bem um efeito grande
-  como os +10,84 pp do caso `Young_Technical` (`CANARY_DEMO_GUIDE.md`), mas que exigiria soak muito
+  como os +8,94 pp do caso `Young_Technical` (`CANARY_DEMO_GUIDE.md`), mas que exigiria soak muito
   mais longo se o retreino em questão tivesse produzido apenas alguns décimos de ponto percentual de
   diferença — e o tamanho do efeito de um retreino específico não é conhecido antes de medir com
   tráfego real. **Diferenças pequenas exigem soak longo ou percentual maior**, e isso deveria ser

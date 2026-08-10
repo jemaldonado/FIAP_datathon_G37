@@ -159,7 +159,7 @@ def load_and_segment_data(kaggle_path: str) -> Tuple[pd.DataFrame, Dict]:
     # Segmentação por profissão
     def categorize_job(job):
         job_lower = str(job).lower()
-        if any(x in job_lower for x in ['admin', 'management', 'director']):
+        if any(x in job_lower for x in ['admin', 'management']):
             return 'Admin'
         elif any(x in job_lower for x in ['technician', 'blue', 'craft']):
             return 'Professional'

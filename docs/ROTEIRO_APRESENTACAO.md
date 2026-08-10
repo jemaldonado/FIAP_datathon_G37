@@ -77,8 +77,8 @@ lugar certo pra aprofundar a seção 1:10–1:45 se sobrar tempo ou em Q&A.
 
 > "Cada contexto mantém uma distribuição Beta por estratégia de contato. Para cada cliente
 > novo, o modelo amostra uma probabilidade de sucesso por estratégia, escolhe a de maior valor
-> amostrado, observa se converteu, e atualiza. A conversão varia de **7,5% no pior contexto até
-> 41,1% no melhor** — mais de 30 pontos percentuais que uma política única, sem contexto,
+> amostrado, observa se converteu, e atualiza. A conversão varia de **8,7% no pior contexto até
+> 42,2% no melhor** — mais de 30 pontos percentuais que uma política única, sem contexto,
 > jamais capturaria."
 
 ### 1:45–2:45 — Demo ao vivo: a API respondendo (tela: Swagger)
@@ -94,9 +94,9 @@ lugar certo pra aprofundar a seção 1:10–1:45 se sobrar tempo ou em Q&A.
 > "Modelos são retreinados com dados novos — e isso pode mudar a recomendação. O dataset é
 > ordenado pela data real de contato, então comparamos um snapshot treinado só com os primeiros
 > 70% dos contatos com o modelo final, treinado com a campanha completa. Para clientes jovens
-> em cargos técnicos, o snapshot antigo recomenda campanha por e-mail, com 11,67% de conversão
+> em cargos técnicos, o snapshot antigo recomenda campanha por e-mail, com 10,72% de conversão
 > esperada. Com mais dados reais — incluindo um período de conversão bem mais alta — o modelo
-> passa a recomendar contato celular padrão, com 22,51%: quase o dobro, e troca a oferta
+> passa a recomendar contato celular padrão, com 19,66%: quase 1,8x maior, e troca a oferta
 > vencedora. Uma troca real, não simulada artificialmente."
 
 Mostrar a tela do Streamlit: já abre com a comparação estática (baseline vs. canary). Clicar

@@ -247,7 +247,7 @@ definitions:
         example: 35
       job:
         type: string
-        description: Customer job (admin, director, retired, etc)
+        description: Customer job (admin., blue-collar, technician, management, retired, etc)
         example: admin
       marital:
         type: string

@@ -100,7 +100,8 @@ class TestContextualThompsonSampling:
         """Test age group boundaries"""
         model = ContextualThompsonSampling()
 
-        # Test boundaries
+        # Test boundaries (real dataset min age is 17)
+        assert model._get_age_group(17) == 'Young'
         assert model._get_age_group(18) == 'Young'
         assert model._get_age_group(29) == 'Young'
         assert model._get_age_group(30) == 'Prime'
@@ -116,14 +117,15 @@ class TestContextualThompsonSampling:
 
         assert model._get_job_category('admin') == 'Technical'
         assert model._get_job_category('technician') == 'Technical'
-        assert model._get_job_category('engineer') == 'Technical'
+        assert model._get_job_category('blue-collar') == 'Technical'
+        assert model._get_job_category('services') == 'Technical'
 
     def test_job_category_mapping_business(self):
         """Test job category mapping for business jobs"""
         model = ContextualThompsonSampling()
 
         assert model._get_job_category('management') == 'Business'
-        assert model._get_job_category('director') == 'Business'
+        assert model._get_job_category('self-employed') == 'Business'
         assert model._get_job_category('entrepreneur') == 'Business'
 
     def test_job_category_mapping_other(self):
@@ -201,7 +203,7 @@ class TestDeskScenarios:
     def test_prime_business_scenario(self):
         """Scenario: Prime age business manager"""
         model = ContextualThompsonSampling()
-        arm, (age_group, job_cat) = model.select_arm(age=38, job='director')
+        arm, (age_group, job_cat) = model.select_arm(age=38, job='management')
 
         assert age_group == 'Prime'
         assert job_cat == 'Business'
@@ -260,7 +262,7 @@ class TestModelSerialization:
         loaded_model = joblib.load(model_file)
 
         # Verify it works
-        arm, loaded_context = loaded_model.select_arm(age=35, job='director')
+        arm, loaded_context = loaded_model.select_arm(age=35, job='management')
         assert loaded_context == ('Prime', 'Business')
 
         # Verify training data was preserved
