@@ -1,23 +1,34 @@
 #!/usr/bin/env python
 """
-Automated data download from Kaggle.
-
-Downloads Bank Marketing Dataset and processes it into parquet format.
+Download the Bank Marketing dataset from Kaggle and build the processed parquet.
 
 Usage:
-    python scripts/download_data.py
+    python scripts/download_data.py           # skip the download if the CSV is already there
+    python scripts/download_data.py --force   # re-download even when the CSV is present
 
 Prerequisites:
-    - Kaggle API credentials configured (~/.kaggle/kaggle.json)
-    - kaggle Python package installed (pip install kaggle)
+    - Copy .env.example to .env and fill in KAGGLE_USERNAME and KAGGLE_KEY
+      (both come from the kaggle.json that Kaggle > Settings > API > Create New Token gives you).
+    - Dependencies installed: pip install -r requirements.txt
+
+The credentials are checked before the kaggle package is imported on purpose: importing it
+authenticates immediately and terminates the process on failure, which would make every error
+message below unreachable.
 """
 
+import argparse
+import logging
+import os
 import sys
+from dataclasses import dataclass
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
+REPO_ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(REPO_ROOT / "src"))
 
-import logging
+from dotenv import load_dotenv
+
+load_dotenv(REPO_ROOT / ".env")
 
 logging.basicConfig(
     level=logging.INFO,
@@ -26,77 +37,140 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
-def download_from_kaggle():
-    """Download dataset from Kaggle using Kaggle API"""
+@dataclass(frozen=True)
+class Dataset:
+    """A Kaggle dataset and the ETL module that turns it into a parquet."""
+
+    slug: str
+    directory: str
+    etl_module: str
+
+    @property
+    def raw_path(self) -> Path:
+        return REPO_ROOT / "data" / "kaggle" / self.directory
+
+
+PRIMARY = Dataset(
+    slug='henriqueyamahata/bank-marketing',
+    directory='bank-marketing',
+    etl_module='datathon.etl.bank_marketing_primary',
+)
+
+CREDENTIALS_HELP = """
+Kaggle credentials not found.
+
+1. Sign in at https://www.kaggle.com and open Settings > API > Create New Token.
+   The browser downloads a kaggle.json holding a "username" and a "key".
+2. Copy .env.example to .env in the repository root.
+3. Put those two values in .env:
+
+       KAGGLE_USERNAME=your_kaggle_username
+       KAGGLE_KEY=your_kaggle_api_key
+
+4. Run this script again.
+
+A KAGGLE_API_TOKEN access token in .env is accepted as an alternative to the pair above.
+Never commit .env - it is listed in .gitignore.
+"""
+
+
+def has_credentials() -> bool:
+    """True when the environment carries credentials the Kaggle client can use."""
+    if os.environ.get('KAGGLE_USERNAME') and os.environ.get('KAGGLE_KEY'):
+        return True
+    return bool(os.environ.get('KAGGLE_API_TOKEN'))
+
+
+def already_downloaded(dataset: Dataset) -> bool:
+    """True when the target directory already holds a CSV, manually placed or not."""
+    return any(dataset.raw_path.glob('*.csv'))
+
+
+def build_api():
+    """Import and authenticate the Kaggle client. Only call this after has_credentials()."""
+    from kaggle.api.kaggle_api_extended import KaggleApi
+
+    api = KaggleApi()
+    api.authenticate()
+    return api
+
+
+def download_dataset(api, dataset: Dataset, force: bool) -> bool:
+    """Download one dataset. Returns False when it could not be made available."""
+    if already_downloaded(dataset) and not force:
+        logger.info(f"Skipping {dataset.slug} - CSV already in {dataset.raw_path.relative_to(REPO_ROOT)}")
+        return True
+
+    dataset.raw_path.mkdir(parents=True, exist_ok=True)
+    logger.info(f"Downloading {dataset.slug} -> {dataset.raw_path.relative_to(REPO_ROOT)}")
+
     try:
-        import kaggle
-    except ImportError:
-        logger.error("kaggle package not installed. Run: pip install kaggle")
-        return False
-
-    kaggle_dir = Path(__file__).parent.parent / "data" / "kaggle" / "bank-marketing"
-    kaggle_dir.mkdir(parents=True, exist_ok=True)
-
-    logger.info(f"Downloading Bank Marketing Dataset (primary: henriqueyamahata/bank-marketing) from Kaggle...")
-    logger.info(f"Destination: {kaggle_dir}")
-
-    try:
-        from kaggle.api.kaggle_api_extended import KaggleApi
-        api = KaggleApi()
-        api.authenticate()
-
-        api.dataset_download_files(
-            'henriqueyamahata/bank-marketing',
-            path=str(kaggle_dir),
-            unzip=True
+        api.dataset_download_files(dataset.slug, path=str(dataset.raw_path), unzip=True)
+    except Exception as exc:
+        logger.error(f"Download of {dataset.slug} failed: {exc}")
+        logger.error(
+            f"Manual alternative: download from https://www.kaggle.com/datasets/{dataset.slug} "
+            f"and extract the CSV into {dataset.raw_path.relative_to(REPO_ROOT)}"
         )
-
-        logger.info("✓ Download successful")
-        return True
-
-    except Exception as e:
-        logger.error(f"Download failed: {e}")
-        logger.error("\nManual setup:")
-        logger.error("1. Go to: https://www.kaggle.com/datasets/henriqueyamahata/bank-marketing")
-        logger.error("2. Click 'Download'")
-        logger.error(f"3. Extract to: {kaggle_dir}")
-        logger.error("4. Run: python -m datathon.etl.bank_marketing_primary")
         return False
 
+    if not already_downloaded(dataset):
+        logger.error(f"{dataset.slug} downloaded but no CSV appeared in {dataset.raw_path}")
+        return False
 
-def process_data():
-    """Process raw data into parquet format"""
-    logger.info("\nProcessing data...")
+    logger.info(f"OK {dataset.slug}")
+    return True
 
-    from datathon.etl.bank_marketing_primary import run
+
+def run_etl(dataset: Dataset) -> bool:
+    """Run the ETL module of one dataset. Returns False on failure."""
+    import importlib
 
     try:
-        run()
-        logger.info("✓ Data processing complete")
+        module = importlib.import_module(dataset.etl_module)
+        module.run()
         return True
-    except Exception as e:
-        logger.error(f"Processing failed: {e}")
+    except Exception as exc:
+        logger.error(f"ETL {dataset.etl_module} failed: {exc}")
         return False
+
+
+def parse_args():
+    parser = argparse.ArgumentParser(description=__doc__.strip().splitlines()[0])
+    parser.add_argument(
+        '--force',
+        action='store_true',
+        help='re-download the dataset even when the CSV is already present',
+    )
+    return parser.parse_args()
 
 
 def main():
+    args = parse_args()
+
+    # Every ETL module resolves data/ relative to the working directory.
+    os.chdir(REPO_ROOT)
+
     logger.info("=" * 70)
     logger.info("DATA DOWNLOAD AND SETUP")
     logger.info("=" * 70)
 
-    # Step 1: Download
-    if not download_from_kaggle():
+    if not has_credentials():
+        logger.error(CREDENTIALS_HELP)
         sys.exit(1)
 
-    # Step 2: Process
-    if not process_data():
+    api = build_api()
+
+    if not (download_dataset(api, PRIMARY, args.force) and run_etl(PRIMARY)):
         sys.exit(1)
 
-    logger.info("\n" + "=" * 70)
+    logger.info("=" * 70)
     logger.info("SETUP COMPLETE")
     logger.info("=" * 70)
+
     logger.info("Data ready at: data/processed/bank_marketing_primary.parquet")
-    logger.info("\nNext steps:")
+    logger.info("")
+    logger.info("Next steps:")
     logger.info("1. python scripts/train_simple.py")
     logger.info("2. python src/datathon/api/app.py")
     logger.info("3. Open http://localhost:5000/apidocs")
