@@ -31,32 +31,90 @@ Este projeto implementa um multi-armed bandit contextual para otimizar estratég
 ## Instalação e execução
 
 ### Requisitos
-- Python 3.11+
-- pip ou uv
-- Conta Kaggle (para baixar os dados)
+- Python 3.11 ou superior
+- pip
+- Conta no Kaggle (os dados brutos vêm de lá)
 
-### Passos
+### Caminho mínimo
+
+Sete passos, na ordem. Rode todos a partir da raiz do repositório — os módulos de ETL
+resolvem `data/` em relação ao diretório atual.
+
+**1. Clone o repositório**
 
 ```bash
-# 1. Clone
-git clone https://github.com/jemaldonado/FIAP_datathon_G37.git
+git clone https://github.com/vitorpaixao/FIAP_datathon_G37.git
 cd FIAP_datathon_G37
-
-# 2. Instale dependências
-pip install -r requirements.txt
-
-# 3. Baixe dados (automático ou manual)
-python scripts/download_data.py
-
-# 4. Treinar modelo
-python scripts/train_simple.py
-
-# 5. Rodar API
-python src/datathon/api/app.py
-
-# 6. Testar
-# Abra http://localhost:5000/apidocs no navegador
 ```
+
+**2. Crie e ative o ambiente virtual**
+
+```bash
+# Windows (PowerShell)
+python -m venv .venv
+.venv\Scripts\activate
+
+# Linux / macOS
+python3 -m venv .venv
+source .venv/bin/activate
+```
+
+**3. Instale as dependências**
+
+```bash
+pip install -r requirements.txt
+```
+
+**4. Configure as credenciais do Kaggle**
+
+Copie `.env.example` para `.env` e preencha os dois valores:
+
+```bash
+# Windows (PowerShell)
+copy .env.example .env
+
+# Linux / macOS
+cp .env.example .env
+```
+
+```env
+KAGGLE_USERNAME=seu_usuario_kaggle
+KAGGLE_KEY=sua_chave_de_api
+```
+
+Os dois valores estão no `kaggle.json` que o Kaggle baixa em
+**Settings → API → Create New Token**. O `.env` está no `.gitignore` e nunca deve ser
+commitado.
+
+**5. Baixe os dados e gere a camada processada**
+
+```bash
+python scripts/download_data.py
+```
+
+Baixa as 4 bases para `data/kaggle/` e grava os parquets em `data/processed/`. Bases já
+baixadas são puladas; use `--force` para baixar de novo. Se preferir baixar manualmente,
+coloque o CSV em `data/kaggle/bank-marketing/` e rode o script — ele pula o download e vai
+direto para o ETL.
+
+Em Linux, macOS ou Git Bash, `scripts/download_data.sh` faz o download equivalente (sem o
+ETL).
+
+**6. Treine o modelo**
+
+```bash
+python scripts/train_simple.py
+```
+
+Grava `data/models/thompson_model.json`.
+
+**7. Suba a API**
+
+```bash
+python src/datathon/api/app.py
+```
+
+Abra <http://localhost:5000/apidocs> no navegador.
 
 ---
 
