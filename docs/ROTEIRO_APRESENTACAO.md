@@ -1,4 +1,4 @@
-# Roteiro do Vídeo Pitch (até 5 minutos)
+# Roteiro do Vídeo Pitch (até 6 minutos)
 
 
 ## Checklist oficial do demo day — onde cada item é coberto
@@ -13,9 +13,9 @@ comprovante de cada item já entregue e o momento do vídeo (se houver) que o de
 | Baseline e Modelo Adaptativo implementados e comparados | pronto | `notebooks/datathon_main.ipynb` — baseline 11,27% vs Thompson 14,97% (+3,70 p.p.), reproduzível; falar em 1:10–1:45 |
 | README/Notebook com 5 casos de teste (Golden Set) | pronto | `data/golden_set/golden_set.json`, seção README "Golden set — 5 perfis validados"; citar em 3:45–4:15 |
 | Código executável que retorna a predição | pronto | `POST /recommend` via Swagger, demo ao vivo em 1:45–2:45 |
-| README com link da base + parágrafo de infraestrutura cloud | pronto | seção README "Arquitetura" + `docs/ARQUITETURA.md`; citar em 4:15–4:50 |
-| Tracking de experimentos via MLOps (MLflow) | pronto | `.mlflow/mlflow.db` + `app_mlflow_showcase.py` (evidência navegável); citar em 3:45–4:15 |
-| Vídeo de até 5 min, código funcionando, escolhas justificadas | pendente (este roteiro) | gravar seguindo o roteiro abaixo |
+| README com link da base + parágrafo de infraestrutura cloud | pronto | seção README "Arquitetura" + `docs/ARQUITETURA.md`; citar em 4:50–5:25 |
+| Tracking de experimentos via MLOps (MLflow) | pronto | `.mlflow/mlflow.db` + `app_mlflow_showcase.py`, com tela dedicada em 4:15–4:50 |
+| Vídeo de até 6 min, código funcionando, escolhas justificadas | pendente (este roteiro) | gravar seguindo o roteiro abaixo |
 
 **Além do mínimo do edital:** o projeto implementa canary deployment de verdade (não só
 teórico) e documenta a arquitetura AWS/Azure em nível profissional com custos reais —
@@ -45,12 +45,12 @@ vem fixo — não precisa preencher nada.
 
 **Dashboards do projeto** (instalação, propósito e comando de cada um):
 ver seção [Dashboards](../README.md#dashboards) do `README.md`. Os dois usados no roteiro
-abaixo são `app_canary_arm_swap_demo.py` (2:45–3:45) e, opcionalmente, `app_mlflow_showcase.py`
-(3:45–4:15); `app_dashboard.py` e `app_dashboard_pt.py` são material de apoio para perguntas da
-banca fora do corte de 5 minutos — a página "Thompson Aprende?" de `app_dashboard_pt.py` é o
-lugar certo pra aprofundar a seção 1:10–1:45 se sobrar tempo ou em Q&A.
+abaixo são `app_canary_arm_swap_demo.py` (2:45–3:45) e `app_mlflow_showcase.py` (4:15–4:50);
+`app_dashboard.py` e `app_dashboard_pt.py` são material de apoio para perguntas da banca fora
+do corte de 6 minutos — a página "Thompson Aprende?" de `app_dashboard_pt.py` é o lugar certo
+pra aprofundar a seção 1:10–1:45 se sobrar tempo ou em Q&A.
 
-## Roteiro (cronometrado — soma 5:00)
+## Roteiro (cronometrado — soma 6:00)
 
 ### 0:00–0:30 — O problema de negócio
 
@@ -107,17 +107,22 @@ Mostrar a tela do Streamlit: já abre com a comparação estática (baseline vs.
 > promovemos para 100% dos clientes se os números confirmarem — em vez de aplicar o retreino
 > cegamente."
 
-### 3:45–4:15 — Resultados e validação (tela: golden set no README, opcional: app_mlflow_showcase.py)
+### 3:45–4:15 — Resultados e validação (tela: golden set no README)
 
 > "Validamos com um golden set de 5 perfis representativos, conferindo se a recomendação faz
 > sentido para cada um, com 60 testes automatizados cobrindo API, bandit e canary deploy —
-> todos passam — e cada treino fica registrado no MLflow com os parâmetros do modelo e as
-> métricas de baseline vs. Thompson que acabei de mostrar."
+> todos passam."
 
-Se der tempo, alternar rapidamente para `app_mlflow_showcase.py`: mostra as runs reais gravadas
-no MLflow e o mesmo gráfico baseline vs. Thompson, direto do tracking store.
+### 4:15–4:50 — MLflow: tracking de experimentos (tela: app_mlflow_showcase.py, porta 8502)
 
-### 4:15–4:50 — Nuvem (tela: `docs/ARQUITETURA.md` ou `docs/architecture/`)
+> "Cada treino fica registrado no MLflow — não é só um número solto no README. Aqui estão as
+> runs reais, direto do tracking store: parâmetros do modelo e as métricas de baseline vs.
+> Thompson que mostrei antes, 11,27% para 14,97%, rastreáveis run por run."
+
+Mostrar o gráfico baseline vs. Thompson do dashboard, puxado direto de `.mlflow/mlflow.db` —
+não é a UI do MLflow, mas os dados são os mesmos, sem precisar abrir outra ferramenta.
+
+### 4:50–5:25 — Nuvem (tela: `docs/ARQUITETURA.md` ou `docs/architecture/`)
 
 > "Para produção, a arquitetura é enxuta de propósito: dados e modelo (poucos KBs) em object
 > storage — S3 na AWS ou Blob Storage na Azure —, treino como função serverless, API e
@@ -125,10 +130,10 @@ no MLflow e o mesmo gráfico baseline vs. Thompson, direto do tracking store.
 > não exige isso. O canary deploy que acabamos de mostrar também tem equivalente de
 > infraestrutura em cada nuvem — detalhado em `docs/architecture/`."
 
-### 4:50–5:00 — Fechamento
+### 5:25–6:00 — Fechamento
 
-> "Em resumo: um bandit contextual que aprende com cada cliente, valida contra baseline,
-> versiona experimentos e usa canary deploy para validar retreinos com segurança antes de
-> impactar todos os clientes. Obrigado!"
+> "Em resumo: um bandit contextual que aprende com cada cliente, valida contra baseline
+> (11,27% para 14,97%), versiona cada experimento no MLflow e usa canary deploy para validar
+> retreinos com segurança antes de impactar todos os clientes. Obrigado!"
 
 

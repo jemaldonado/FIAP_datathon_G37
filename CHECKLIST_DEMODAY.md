@@ -58,7 +58,7 @@ store real (não é mockado):
 Para reproduzir: `streamlit run app_mlflow_showcase.py`, ou `mlflow ui --backend-store-uri
 sqlite:///.mlflow/mlflow.db`.
 
-## 8. Vídeo de apresentação (até 5 min)
+## 8. Vídeo de apresentação (até 6 min)
 
 Roteiro cronometrado pronto em
 [`docs/ROTEIRO_APRESENTACAO.md`](docs/ROTEIRO_APRESENTACAO.md) — cobre problema de negócio,

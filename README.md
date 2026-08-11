@@ -19,7 +19,8 @@ Este projeto implementa um multi-armed bandit contextual para otimizar estratég
 | Métrica | Resultado |
 |---------|-----------|
 | Clientes analisados | 41.188 |
-| Taxa de conversão geral | 11,27% |
+| Baseline (mix histórico, sem contexto) | 11,27% |
+| **Thompson Sampling (sem contexto, Etapa 3)** | **14,97% (+3,70 p.p. vs. baseline)** |
 | Melhor contexto | Senior + Other = 42,20% |
 | Spread de conversão | 33,5 p.p. (~4,9x melhor que pior) |
 | Contextos únicos | 12 (4 age_groups × 3 job_categories) |
