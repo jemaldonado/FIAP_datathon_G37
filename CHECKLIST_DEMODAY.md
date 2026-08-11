@@ -58,19 +58,12 @@ store real (não é mockado):
 Para reproduzir: `streamlit run app_mlflow_showcase.py`, ou `mlflow ui --backend-store-uri
 sqlite:///.mlflow/mlflow.db`.
 
-## 8. Vídeo de apresentação (até 6 min)
-
-Roteiro cronometrado pronto em
-[`docs/ROTEIRO_APRESENTACAO.md`](docs/ROTEIRO_APRESENTACAO.md) — cobre problema de negócio,
-dados, como o modelo decide, demo ao vivo da API, canary deploy, validação e nuvem. Gravação
-ainda pendente.
-
 ---
 
 Os dois itens abaixo não fazem parte do checklist oficial do edital — são material extra pra
 facilitar a correção.
 
-## 9. Arquitetura
+## 8. Arquitetura
 
 Documentação completa de arquitetura-alvo em nuvem, além do mínimo pedido (o edital só exige
 "um ou dois parágrafos sobre AWS" — o projeto documenta três nuvens em profundidade):
@@ -90,7 +83,7 @@ desproporcionais ao tamanho real do problema. Cenário acadêmico cabe essencial
 nas três; GCP Cloud Run é o mais barato em cenário de maior tráfego e tem o mecanismo de canary
 deploy mais direto (traffic splitting nativo entre revisions).
 
-## 10. Dashboards
+## 9. Dashboards
 
 4 dashboards Streamlit, cada um com um propósito diferente (detalhes completos na seção
 [Dashboards do README](README.md#dashboards)). Nenhum precisa da API rodando, exceto o de canary.
