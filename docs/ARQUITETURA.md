@@ -28,26 +28,41 @@ consulta): [`docs/architecture/AWS.md`](architecture/AWS.md)
 
 ```mermaid
 graph TD
-    A("Kaggle CSV") -->|upload| S3raw[("S3<br/>raw/")]
-    S3raw --> Train[["AWS Lambda<br/>treino batch (pandas)"]]
-    Train --> S3models[("S3<br/>models/thompson_model.json")]
-    S3models --> API[["App Runner<br/>Flask · /recommend"]]
-    S3models --> Dash[["App Runner<br/>Streamlit dashboard"]]
-    API --> Client("Cliente HTTP")
-    Sched{{"EventBridge Scheduler<br/>semanal · opcional"}} -.-> Train
-    API --> CW[/"CloudWatch Logs"/]
-    Dash -.-> CW
+    Client("Banca / Cliente HTTP")
+
+    subgraph AWS Cloud
+        ECR[("Amazon ECR<br/>Imagens Docker (API e Dash)")]
+        A("Kaggle CSV") -->|Upload| S3raw[("Amazon S3<br/>raw/")]
+        S3raw --> Train[["AWS Lambda<br/>Treino Batch (Pandas)"]]
+        Train -->|Salva modelo JSON| S3models[("Amazon S3<br/>models/")]
+        subgraph Amazon ECS Serverless
+            API[["ECS Fargate Task<br/>Flask API (Porta 5000)"]]
+            Dash[["ECS Fargate Task<br/>Streamlit Dashboard (Porta 8501)"]]
+        end
+        ECR -.->|Pull da Imagem| API
+        ECR -.->|Pull da Imagem| Dash
+        S3models -->|Carrega Modelo| API
+        S3models -->|Lê Dados| Dash
+        API <-->|Consome Endpoints| Dash
+        Sched{{"EventBridge Scheduler<br/>Gatilho Semanal"}} -.->|Dispara| Train
+        API -.->|Métricas e Logs| CW[/"CloudWatch Logs"/]
+        Dash -.->|Logs| CW
+        Train -.->|Logs| CW
+    end
+    API <--> Client
+    Dash <--> Client
 ```
 
 | Necessidade | Serviço | Papel |
 |---|---|---|
 | Dados (raw, processado, modelo) | **S3** | um bucket, prefixos `raw/`, `processed/`, `models/` |
+| Registro de contêineres | **Amazon ECR** | armazena as imagens Docker imutáveis da API e do Dashboard |
 | Treino/pipeline batch | **Lambda** | roda `train_with_mlflow.py`, segundos, sem SageMaker |
-| API | **App Runner** | container Flask, HTTPS gerenciado, `/recommend` |
-| Dashboard | **App Runner** | segundo serviço, mesmo padrão, serve o Streamlit |
+| API | **Amazon ECS (Fargate)** | contêiner Flask (porta 5000), computação serverless, `/recommend` |
+| Dashboard | **Amazon ECS (Fargate)** | segundo serviço, contêiner Streamlit (porta 8501), interface e MLflow Showcase |
 | Experiment tracking | **MLflow + S3** | backend de artifacts no bucket |
-| Logs | **CloudWatch** | nativo de Lambda/App Runner |
-| Credenciais | **IAM Role** | permissão restrita ao bucket, nunca chaves fixas |
+| Logs | **CloudWatch** | coleta nativa de Lambda e ECS (driver `awslogs`) |
+| Credenciais | **IAM Role** | permissão restrita ao bucket e execução de tarefas, nunca chaves fixas |
 
 ## Azure
 

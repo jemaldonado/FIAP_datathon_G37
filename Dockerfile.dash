@@ -1,0 +1,16 @@
+FROM python:3.11-slim
+
+WORKDIR /app
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copia tudo (incluindo a pasta pages/ e o Painel_Datathon.py)
+COPY . .
+
+EXPOSE 8501
+
+ENV PYTHONPATH=/app
+
+# Ponto de entrada oficial apontando para o arquivo na raiz
+CMD ["python", "-m", "streamlit", "run", "Painel_Datathon.py", "--server.port=8501", "--server.address=0.0.0.0"]
