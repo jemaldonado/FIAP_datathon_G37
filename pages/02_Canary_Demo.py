@@ -48,8 +48,9 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-API_URL = "http://localhost:5000"
-REPO_ROOT = Path(__file__).parent
+import os
+API_URL = os.getenv("API_URL", "http://localhost:5000")
+REPO_ROOT = Path(__file__).parent.parent
 CONTEXT = ("Young", "Technical")
 BASELINE_MODEL_PATH = "data/models/thompson_model_baseline_temporal.json"
 

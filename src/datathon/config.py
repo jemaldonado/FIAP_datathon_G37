@@ -79,45 +79,42 @@ class Config:
     def _setup_paths(self):
         """Setup paths based on environment"""
         if self.env == Environment.LOCAL:
-            # Local paths (relative to project root)
             self.project_root = Path(__file__).parent.parent.parent
             self.data_path = self.project_root / "data" / "processed"
-            # data/models/ (not the root models/ dir) is what the API
-            # (src/datathon/api/app.py) and the dashboard actually read —
-            # keeping this in sync avoids promoting/retraining into a
-            # folder nothing in production looks at.
             self.model_path = self.project_root / "data" / "models"
             self.output_path = self.project_root / "outputs"
+            
+            # Cria os diretórios localmente
+            for path in [self.data_path, self.model_path, self.output_path]:
+                path.mkdir(parents=True, exist_ok=True)
 
         elif self.env == Environment.AWS:
-            # AWS paths (S3 and local cache)
             self.s3_bucket = os.getenv('AWS_S3_BUCKET', 'datathon-bucket')
             self.s3_prefix = os.getenv('AWS_S3_PREFIX', 'datathon/')
-            self.project_root = Path('/opt/ml')
-            self.data_path = self.project_root / "input" / "data"
-            self.model_path = self.project_root / "model"
-            self.output_path = self.project_root / "output"
+            
+            # Na Lambda, só o /tmp é liberado. NÃO podemos usar mkdir aqui.
+            self.project_root = Path('/tmp')
+            self.data_path = self.project_root / "data"
+            self.model_path = self.project_root / "models"
+            self.output_path = self.project_root / "outputs"
 
         elif self.env == Environment.AZURE:
-            # Azure paths (Blob Storage and local cache)
             self.blob_container = os.getenv('AZURE_BLOB_CONTAINER', 'datathon')
             self.blob_prefix = os.getenv('AZURE_BLOB_PREFIX', 'datathon/')
             
-            # FALLBACK DE MLOPS: Verifica se está rodando fisicamente na nuvem
             azure_mount_path = '/mnt/batch/tasks/shared'
             if os.path.exists(azure_mount_path):
                 self.project_root = Path(azure_mount_path)
             else:
-                # Se não encontrar o caminho da Azure, usa o caminho local da sua máquina
                 self.project_root = Path(__file__).parent.parent.parent
 
             self.data_path = self.project_root / "data" / "processed"
             self.model_path = self.project_root / "data" / "models"
             self.output_path = self.project_root / "outputs"
-
-        # Create directories if they don't exist
-        for path in [self.data_path, self.model_path, self.output_path]:
-            path.mkdir(parents=True, exist_ok=True)
+            
+            # Cria os diretórios na Azure
+            for path in [self.data_path, self.model_path, self.output_path]:
+                path.mkdir(parents=True, exist_ok=True)
 
     def _setup_storage(self):
         """Setup storage backend based on environment"""

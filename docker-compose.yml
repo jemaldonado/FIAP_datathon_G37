@@ -1,0 +1,23 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    ports:
+      - "5000:5000"
+    environment:
+      - DATATHON_ENV=local
+
+  dashboard:
+    build:
+      context: .
+      dockerfile: Dockerfile.dash
+    ports:
+      - "8501:8501"
+    environment:
+      - API_URL=http://api:5000
+    volumes:
+      - ./.mlflow:/app/.mlflow   
+      - ./data:/app/data         
+    depends_on:
+      - api

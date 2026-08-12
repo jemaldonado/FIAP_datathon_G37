@@ -32,7 +32,7 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-REPO_ROOT = Path(__file__).parent
+REPO_ROOT = Path(__file__).parent.parent
 MLFLOW_DB = REPO_ROOT / ".mlflow" / "mlflow.db"
 TRACKING_URI = f"sqlite:///{MLFLOW_DB}"
 EXPERIMENT_NAME = "Datathon-Thompson-Sampling"
