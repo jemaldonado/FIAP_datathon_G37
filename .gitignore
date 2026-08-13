@@ -26,6 +26,7 @@ data/synthetic_enrichment/*.jsonl
 *.pt
 *.pth
 mlruns/
+mlflow.db
 
 # OS
 .DS_Store
