@@ -2,7 +2,7 @@
 
 [![Python 3.11+](https://img.shields.io/badge/Python-3.11%2B-blue)](https://www.python.org/downloads/)
 [![Flask](https://img.shields.io/badge/Flask-3.0-green)](https://flask.palletsprojects.com/)
-[![MLflow](https://img.shields.io/badge/MLflow-2.0%2B-blue)](https://mlflow.org/)
+[![MLflow](https://img.shields.io/badge/MLflow-3.x-blue)](https://mlflow.org/)
 [![Tests](https://img.shields.io/badge/Tests-60%2F60%20passing-brightgreen)](tests/)
 [![License](https://img.shields.io/badge/License-MIT-yellow)](#license)
 
@@ -28,6 +28,30 @@ Este projeto implementa um multi-armed bandit contextual para otimizar estratég
 
 ---
 
+## Dados e tratamento
+
+**Base:** [bank-marketing (henriqueyamahata) — Kaggle](https://www.kaggle.com/datasets/henriqueyamahata/bank-marketing) · arquivo `bank-additional-full.csv` · 41.188 contatos de campanhas de telemarketing bancário · alvo `y` = cliente assinou o depósito a prazo.
+
+### Coluna removida por vazamento temporal: `duration`
+
+`duration` é a duração em segundos da ligação — e é a **única** coluna descartada do dataset (41.188 linhas preservadas, 21 colunas → 20). O descarte acontece no ETL, em `src/datathon/etl/bank_marketing_primary.py` (`LEAKAGE_COLS = ["duration"]`), antes de qualquer parquet ser gravado. Os quatro ETLs do projeto aplicam a mesma regra.
+
+Por que ela precisa sair, medido na base bruta:
+
+| Medida | Valor |
+|--------|-------|
+| Duração média da ligação — cliente que **não** converteu | 220,8 s |
+| Duração média da ligação — cliente que **converteu** | 553,2 s |
+| Correlação `duration` × `y` | 0,405 |
+| Conversão quando a ligação passou de 500 s | **42,57%** |
+| Conversão quando a ligação durou menos de 100 s | **0,79%** |
+
+Uma ligação longa não *causa* a conversão: ela é consequência do cliente já estar interessado. A coluna só passa a existir **depois** que a ligação termina, e a decisão de qual oferta apresentar é tomada **antes** dela começar. Um modelo treinado com `duration` teria métrica excelente no papel e seria inútil em produção, porque no momento da decisão esse valor não existe. Manter a coluna seria vazamento temporal — o caso citado explicitamente no enunciado do datathon.
+
+Nenhuma outra coluna foi descartada. O restante do tratamento é apenas normalização: `y` convertido de `yes`/`no` para 1/0 e remoção de espaços nas colunas de texto.
+
+---
+
 ## Instalação e execução
 
 ### Requisitos
@@ -42,10 +66,9 @@ Sete passos, na ordem. Rode todos a partir da raiz do repositório — os módul
 **1. Clone o repositório**
 
 ```bash
-git clone [https://github.com/vitorpaixao/FIAP_datathon_G37.git](https://github.com/vitorpaixao/FIAP_datathon_G37.git)
+git clone https://github.com/jemaldonado/FIAP_datathon_G37.git
 cd FIAP_datathon_G37
-
-````
+```
 
 **2. Crie e ative o ambiente virtual**
 
@@ -211,7 +234,7 @@ Detalhes: [`docs/ARQUITETURA.md`](docs/ARQUITETURA.md) — desenho completo com 
 
 Thompson Sampling aprende diferenças por contexto. O golden set mostra o ranking das 4 estratégias para cada perfil:
 
-\| Perfil | Contexto | Melhor arm | Conversão | 2º melhor | 3º melhor |
+| Perfil | Contexto | Melhor arm | Conversão | 2º melhor | 3º melhor |
 |--------|----------|-----------|-----------|-----------|-----------|
 | Jovem Técnico | Young + Technical | Cellular_Standard | 19,6% | Email (16,9%) | SMS (6,5%) |
 | Executivo Prime | Prime + Business | Cellular_Standard | 15,0% | Email (11,2%) | SMS (7,4%) |
@@ -233,7 +256,7 @@ A base real tem apenas 2 canais (cellular, telephone), mas Thompson Sampling pre
 
 Os 2 canais reais são divididos por primeiro-contato vs. contato-repetido, dando 4 segmentos reais com nome de negócio:
 
-\| Arm | Segmento real | Taxa (base completa) |
+| Arm | Segmento real | Taxa (base completa) |
 |-----|------|------|
 | Cellular_Standard | cellular, primeiro contato | 22,45% (contexto Young+Technical) |
 | Email_Campaign | cellular, contato repetido | 18,72% (contexto Young+Technical) |
@@ -322,12 +345,12 @@ streamlit run Painel_Datathon.py
 
 ### Navegação (Menu Lateral)
 
-Através do menu da barra lateral na pasta `pages/`, a aplicação dá acesso direto a:
+A barra lateral do Streamlit lista quatro entradas — a página principal e as três telas em `pages/`:
 
-1. **Painel Geral (Pipeline Completo):** Visão geral de ponta a ponta do projeto, com dados processados, treino, avaliação por contexto e simulação de recomendações.
-2. **Qualidade de Dados & Métricas:** Validação de qualidade ao vivo, testes estatísticos e a visão "Thompson Aprende?", explicando de forma transparente as incertezas e aprendizados do modelo.
-3. **MLflow Showcase:** Leitura direta do banco local (`.mlflow/mlflow.db`) para exibir graficamente o baseline (11,27%) comparado ao Thompson Sampling (14,97%), evidenciando a etapa de tracking MLOps.
-4. **Canary Demo (Arm Swap):** Simulação interativa baseada no segmento `Young_Technical`, onde se comprova que um retreino vira o braço vencedor, executando a simulação real de promoção e rollback de modelo (via endpoints `/canary/*`).
+1. **Painel Datathon** (`Painel_Datathon.py`) — qualidade de dados e rigor estatístico. Submenu de rádio com: `Visão Geral`, `Qualidade de Dados` (validação ao vivo, nulos, duplicatas, alertas), `Métricas do Modelo` (12 contextos com intervalo de confiança), `Análise Estatística` (chi-square e calculadora de tamanho de amostra), `Demo da API` (formulário de recomendação + os 5 perfis do golden set) e `Canary Deploy` (documentação dos endpoints `/canary/*`).
+2. **Canary Demo** (`pages/02_Canary_Demo.py`) — o caso real de troca de braço no segmento `Young_Technical`: o modelo treinado com os primeiros 70% dos contatos, em ordem cronológica real, recomenda `Email_Campaign` (10,72%); retreinado com todos os dados, passa a recomendar `Cellular_Standard` (19,66%). A comparação no topo lê os dois modelos do disco; a simulação ao vivo abaixo dela precisa da API rodando.
+3. **Pipeline Completo** (`pages/03_Pipeline_Completo.py`) — visão ponta a ponta. Submenu com: `Overview`, `Dados` (treino/teste e heatmap de conversão idade × profissão), `Modelo`, `Thompson Aprende?`, `Golden Set`, `API` e `Métricas`.
+4. **MLflow Showcase** (`pages/04_MLflow_Showcase.py`) — leitura direta de `.mlflow/mlflow.db` para exibir as runs reais, o baseline (11,27%) contra o Thompson Sampling (14,97%) e a análise de exploração por braço. Evidência da Etapa 7.
 
 ## Estrutura Atualizada
 
@@ -358,7 +381,7 @@ FIAP_datathon_G37/
 
 ## Resultados por contexto
 
-\| Posição | Contexto | Conversão | Clientes | Observação |
+| Posição | Contexto | Conversão | Clientes | Observação |
 |---------|----------|-----------|----------|----------|
 | 1 | Senior + Other | 42,2% | 891 | alvo prioritário |
 | 2 | Senior + Technical | 32,5% | 206 | seniors muito valiosos |
@@ -380,5 +403,5 @@ FIAP_datathon_G37/
 ## Contato
 
 - Desenvolvido por: Grupo 37 - Datathon FIAP
-- Repositório: https\://github.com/jemaldonado/FIAP\_datathon\_G37
-- Dados: [Kaggle Dataset](https://www.kaggle.com/datasets/henriqueyamahata/bank-marketing)
+- Repositório: https://github.com/jemaldonado/FIAP_datathon_G37
+- Dados: [bank-marketing (henriqueyamahata) — Kaggle](https://www.kaggle.com/datasets/henriqueyamahata/bank-marketing)
